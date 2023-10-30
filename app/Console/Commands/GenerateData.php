@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Helper\App;
 use Aws\IotDataPlane\IotDataPlaneClient;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
 class GenerateData extends Command
@@ -27,8 +28,20 @@ class GenerateData extends Command
      */
     public function handle()
     {
+        $client = new Client([
+            'verify' => false
+        ]);
+
+        $api    = env('WEATHER_API');
+        $key    = env('WEATHER_API_KEY');
+        $city   = env('WEATHER_API_CITY');
+        $url    = "$api?key=$key&q=$city";
+
         try {
-            $iotClient = new IotDataPlaneClient([
+            $response   = $client->request('GET', $url);
+            $data       = json_decode($response->getBody(), true);
+
+            $iotClient  = new IotDataPlaneClient([
                 'version'       => 'latest',
                 'region'        => env('AWS_DEFAULT_REGION'),
 
@@ -38,19 +51,19 @@ class GenerateData extends Command
                 ],
             ]);
 
-            $data = [
+            $data       = [
                 'temperature'   => App::generateNumber(-30, 30),
                 'windSpeed'     => App::generateNumber(10, 40),
                 'humidity'      => App::generateNumber(0, 100),
             ];
 
-            $topic = 'weather';
-            $payload = json_encode($data);
+            $topic      = 'weather';
+            $payload    = json_encode($data);
 
             $iotClient->publish([
-                'topic'     => $topic,
-                'payload'   => $payload,
-                'qos'       => 1,
+                'topic'         => $topic,
+                'payload'       => $payload,
+                'qos'           => 1,
             ]);
 
             $this->info('Data sent successfully');
