@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('generate-data')->hourly();
+        $schedule->command('app:generate-data')->hourly();
+        $schedule->command('app:get-data')->hourly();
     }
 
     /**

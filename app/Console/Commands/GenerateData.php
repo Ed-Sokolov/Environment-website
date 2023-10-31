@@ -51,11 +51,7 @@ class GenerateData extends Command
                 ],
             ]);
 
-            $data       = [
-                'temperature'   => App::generateNumber(-30, 30),
-                'windSpeed'     => App::generateNumber(10, 40),
-                'humidity'      => App::generateNumber(0, 100),
-            ];
+            $data       = App::generateDataForIoTCore($data);
 
             $topic      = 'weather';
             $payload    = json_encode($data);
@@ -69,7 +65,7 @@ class GenerateData extends Command
             $this->info('Data sent successfully');
         } catch (\Exception $error)
         {
-            $this->error('Data not sent');
+            $this->error($error->getMessage());
         }
     }
 }
