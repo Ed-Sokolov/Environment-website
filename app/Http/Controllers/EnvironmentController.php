@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
+use App\Models\Location;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 
 class EnvironmentController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $disk       = Storage::disk('s3');
-        $content    = $disk->get('weather.json');
-        $data       = json_decode($content, true);
+        /**
+         * @var Collection<Location> $locations
+        */
+        $locations = Location::query()->get();
 
-        return view('index', compact('data'));
+        return view('index', compact('locations'));
     }
 }
