@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -47,7 +48,7 @@ class EnvironmentResource extends JsonResource
             'gust_mph' => $this->gust_mph,
             'gust_kph' => $this->gust_kph,
 
-            'created' => $this->created_at,
+            'created' => Carbon::parse($this->created_at)->format('d.m.Y H:i'),
         ];
     }
 }

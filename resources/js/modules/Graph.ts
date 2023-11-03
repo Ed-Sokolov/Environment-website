@@ -1,13 +1,22 @@
+import Chart from 'chart.js/auto'
 import axios, { type AxiosResponse } from 'axios'
 import { type Location } from '../types/location'
+import Tab from './Tab'
 
 export default class Graph
 {
+    tab: HTMLDivElement | null = null
     data: Location[] | null = null
+    charts: Chart[] = []
 
-    public constructor()
+    public constructor(tab: HTMLDivElement)
     {
-        this.init()
+        if (tab && tab instanceof HTMLDivElement)
+        {
+            this.tab = tab
+
+            this.init()
+        }
     }
 
     private async init(): Promise<void>
@@ -16,18 +25,28 @@ export default class Graph
 
         if (this.data !== null)
         {
-            console.log(this.data);
+            const
+                nav: HTMLDivElement | null      = this.tab.querySelector('div.nav'),
+                content: HTMLDivElement | null  = this.tab.querySelector('div.tab-content')
+
+            if (nav && nav instanceof HTMLDivElement && content && content instanceof HTMLDivElement)
+            {
+                this.data.map((item: Location, id: number): void => {
+                    Tab.generateMainTab(nav, content, item, id, this.charts)
+                })
+            }
         }
     }
 
     private async getData(): Promise<void>
     {
-        return await axios.get('/api/data')
-            .then((res: AxiosResponse): void => {
-                if (res.status === 200)
-                {
-                    this.data = res.data.data
-                }
-            })
+        const res: AxiosResponse<{data: Location[]}> = await axios.get('/api/data')
+
+        if (res.status !== 200)
+        {
+            return null
+        }
+
+        this.data = res.data.data
     }
 }

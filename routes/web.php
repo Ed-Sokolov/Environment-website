@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('data', 'EnvironmentController@index')->name('data.index');
+Route::get('test', 'DataController@show')->name('data.show');

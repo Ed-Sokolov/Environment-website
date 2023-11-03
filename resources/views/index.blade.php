@@ -7,11 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.ts'])
 </head>
 <body>
 <section>
-    <div class="container p-3 text-uppercase w">
+    <div class="container p-3 text-uppercase">
         @if(count($locations) > 0)
             @foreach($locations as $location)
                 <ul class="list-group mb-3">
