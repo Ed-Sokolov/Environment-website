@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DataController extends Controller
 {
-    public function index(): JsonResource
+    public function data(): JsonResource
     {
         /**
          * @var Collection<Location> $locations
@@ -20,7 +20,7 @@ class DataController extends Controller
         return LocationResource::collection($locations);
     }
 
-    public function show(): View
+    public function index(): View
     {
         return view('data');
     }

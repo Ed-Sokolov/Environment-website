@@ -13,9 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('data', 'EnvironmentController@index')->name('data.index');
-Route::get('test', 'DataController@show')->name('data.show');
+Route::get('', 'DataController@index')->name('data.index');
