@@ -1,6 +1,7 @@
 import Chart from 'chart.js/auto'
 import { type Location } from '../types/location'
-import { type Environment } from '../types/environment'
+import { type Environments } from '../chart/datasets/environments'
+import Graph from './Graph'
 
 export default class Tab {
     public static generateMainTab(nav: HTMLDivElement, content: HTMLDivElement, data: Location, id: number, charts: Chart[]): void {
@@ -61,15 +62,14 @@ export default class Tab {
         content.classList.add('tab-content')
         content.setAttribute('id', 'pills-tabContent')
 
-        Tab.generateTabItem(nav, content, tab, data, 'temp_c', charts, 'Temp (℃)', true)
-        Tab.generateTabItem(nav, content, tab, data, 'humidity', charts, 'Humidity (%)')
-        Tab.generateTabItem(nav, content, tab, data, 'wind_kph', charts, 'Wind (kph)')
-        Tab.generateTabItem(nav, content, tab, data, 'gust_kph', charts, 'Gust of wind (kph)')
+        Tab.generateTabItem(nav, content, tab, data, charts, 'Temp (℃)','temp',  true)
+        Tab.generateTabItem(nav, content, tab, data, charts, 'Humidity (%)', 'humidity')
+        Tab.generateTabItem(nav, content, tab, data, charts, 'Wind (kph)', 'wind')
 
         parentContent.appendChild(tab)
     }
 
-    public static generateTabItem(nav: HTMLUListElement, content: HTMLDivElement, tab: HTMLDivElement, data: Location, itemKey: keyof Environment, charts: Chart[], navLinkTitle: string, isActive: boolean = false): void
+    public static generateTabItem(nav: HTMLUListElement, content: HTMLDivElement, tab: HTMLDivElement, data: Location, charts: Chart[], navLinkTitle: string, type: Environments, isActive: boolean = false): void
     {
         const
             navItem: HTMLLIElement      = document.createElement('li'),
@@ -80,13 +80,13 @@ export default class Tab {
 
         navLink.classList.add('nav-link')
         navLink.classList.add('text-uppercase')
-        navLink.setAttribute('id', `pills-${city}-${itemKey}-tab`)
+        navLink.setAttribute('id', `pills-${city}-${type}-tab`)
         navLink.setAttribute('data-bs-toggle', 'pill')
-        navLink.setAttribute('data-bs-target', `#pills-${city}-${itemKey}`)
+        navLink.setAttribute('data-bs-target', `#pills-${city}-${type}`)
         navLink.setAttribute('type', 'button')
         navLink.setAttribute('role', 'tab')
-        navLink.setAttribute('aria-controls', `pills-${city}-${itemKey}`)
-        navLink.setAttribute('aria-controls', `pills-${city}-${itemKey}`)
+        navLink.setAttribute('aria-controls', `pills-${city}-${type}`)
+        navLink.setAttribute('aria-controls', `pills-${city}-${type}`)
         navLink.setAttribute('aria-selected', isActive ? 'true' : 'false')
         navLink.innerHTML = navLinkTitle
 
@@ -98,9 +98,9 @@ export default class Tab {
 
         tabContent.classList.add('tab-pane')
         tabContent.classList.add('fade')
-        tabContent.setAttribute('id', `pills-${city}-${itemKey}`)
+        tabContent.setAttribute('id', `pills-${city}-${type}`)
         tabContent.setAttribute('role', 'tabpanel')
-        tabContent.setAttribute('aria-labelledby', `pills-${city}-${itemKey}-tab`)
+        tabContent.setAttribute('aria-labelledby', `pills-${city}-${type}-tab`)
         tabContent.setAttribute('tabindex', '0')
         tabContent.appendChild(canvas)
 
@@ -111,21 +111,7 @@ export default class Tab {
             tabContent.classList.add('active')
         }
 
-        charts.push(new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: data.environments.map((environment: Environment) => environment.created),
-                datasets: [{
-                    data: data.environments.map((environment: Environment) => Math.round(Number(environment[itemKey]))),
-                    label: navLinkTitle
-                }]
-            },
-            options: {
-                animation: {
-                    delay: 1000
-                }
-            }
-        }))
+        Graph.generateChart(charts, canvas, data, type)
 
         content.appendChild(tabContent)
         tab.appendChild(nav)
