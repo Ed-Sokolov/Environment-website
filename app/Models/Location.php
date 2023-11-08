@@ -20,6 +20,6 @@ class Location extends Model
 
     public function environments(): HasMany
     {
-        return $this->hasMany(Environment::class);
+        return $this->hasMany(Environment::class)->latest()->take(config('environment.count', 7));
     }
 }
