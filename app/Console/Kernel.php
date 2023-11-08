@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:generate-data')->hourly();
         $schedule->command('app:get-data')->hourly();
+        $schedule->command('app:clearing-data')->hourly();
     }
 
     /**

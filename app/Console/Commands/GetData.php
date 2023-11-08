@@ -26,7 +26,7 @@ class GetData extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         try {
             $disk           = Storage::disk('s3');

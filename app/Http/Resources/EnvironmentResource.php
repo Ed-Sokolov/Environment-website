@@ -48,7 +48,7 @@ class EnvironmentResource extends JsonResource
             'gust_mph' => $this->gust_mph,
             'gust_kph' => $this->gust_kph,
 
-            'created' => Carbon::parse($this->created_at)->format('d.m.Y H:i'),
+            'created' => Carbon::parse($this->created_at)->setTimezone('Europe/Kyiv')->format('d.m.Y H:i'),
         ];
     }
 }
