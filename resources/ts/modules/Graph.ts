@@ -55,6 +55,13 @@ export default class Graph
             options: {
                 animation: {
                     delay: 1000
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: formatters[type]
+                        }
+                    }
                 }
             }
         }))
